@@ -13,7 +13,7 @@ struct ContentView: View {
             Image(systemName: "house")
                 .imageScale(.large)
                 .foregroundStyle(.tint)
-            Text("Tobias ist toll und kann bb")
+            Text("Tobias ist toll und kann barcode implementiert")
         }
         .padding()
     }
