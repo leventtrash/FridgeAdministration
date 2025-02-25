@@ -1,75 +1,58 @@
-//
-//  BarcodeScannerView.swift
-//  FridgeAdministration
-//
-//  Created by Levent Aydogan on 18.02.25.
-//
-
-
 import SwiftUI
-import AVFoundation
+import CodeScanner
 
-struct BarcodeScannerView: UIViewControllerRepresentable {
-    @Binding var scannedCode: String
+struct BarcodeScannerView: View {
+    @StateObject private var productViewModel = ProductViewModel()
+    @StateObject private var userProductViewModel = UserProductViewModel()
+    @State private var scannedBarcode: String = ""
+    @State private var expiryDate: String = ""
+    @State private var isShowingScanner = false
     
-    func makeUIViewController(context: Context) -> ScannerVC {
-        let scanner = ScannerVC()
-        scanner.delegate = context.coordinator
-        return scanner
-    }
-    
-    func updateUIViewController(_ uiViewController: ScannerVC, context: Context) {}
-    
-    func makeCoordinator() -> Coordinator {
-        Coordinator(self)
-    }
-    
-    class Coordinator: NSObject, AVCaptureMetadataOutputObjectsDelegate {
-        var parent: BarcodeScannerView
-        
-        init(_ parent: BarcodeScannerView) {
-            self.parent = parent
-        }
-        
-        func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
-            if let metadataObject = metadataObjects.first as? AVMetadataMachineReadableCodeObject, let code = metadataObject.stringValue {
-                DispatchQueue.main.async {
-                    self.parent.scannedCode = code
+    var body: some View {
+        VStack {
+            Button(action: { isShowingScanner = true }) {
+                Image(systemName: "qrcode.viewfinder")
+                    .resizable()
+                    .frame(width: 40, height: 40)
+                    .padding()
+            }
+            .background(Color.blue.opacity(0.2))
+            .clipShape(Circle())
+            .sheet(isPresented: $isShowingScanner) {
+                CodeScannerView(codeTypes: [.ean13, .ean8, .upce], completion: handleScan)
+            }
+            
+            if let product = productViewModel.product {
+                VStack {
+                    Text("Produkt: \(product.name)")
+                    Text("Marke: \(product.brand)")
+                    AsyncImage(url: URL(string: product.imageUrl))
+                        .frame(width: 100, height: 100)
+                    TextField("Ablaufdatum eingeben", text: $expiryDate)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .padding()
+                    Button("Speichern") {
+                        userProductViewModel.saveProduct(barcode: product.barcode, expiryDate: expiryDate)
+                    }
+                    .buttonStyle(.borderedProminent)
                 }
             }
+        }
+        .navigationTitle("Scanner")
+    }
+    
+    func handleScan(result: Result<ScanResult, ScanError>) {
+        isShowingScanner = false
+        switch result {
+        case .success(let result):
+            scannedBarcode = result.string
+            productViewModel.fetchProduct(barcode: scannedBarcode)
+        case .failure(let error):
+            print("Scan-Fehler: \(error.localizedDescription)")
         }
     }
 }
 
-class ScannerVC: UIViewController {
-    var delegate: AVCaptureMetadataOutputObjectsDelegate?
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        let session = AVCaptureSession()
-        
-        guard let device = AVCaptureDevice.default(for: .video) else {
-            print("❌ Keine Kamera verfügbar oder Zugriff verweigert")
-            return
-        }
-        
-        guard let input = try? AVCaptureDeviceInput(device: device) else {
-            print("❌ Kamera-Input konnte nicht erstellt werden")
-            return
-        }
-
-        let output = AVCaptureMetadataOutput()
-
-        session.addInput(input)
-        session.addOutput(output)
-        
-        output.setMetadataObjectsDelegate(delegate, queue: DispatchQueue.main)
-        output.metadataObjectTypes = [.ean13, .ean8, .upce]
-        
-        let previewLayer = AVCaptureVideoPreviewLayer(session: session)
-        previewLayer.videoGravity = .resizeAspectFill
-        previewLayer.frame = view.layer.bounds
-        view.layer.addSublayer(previewLayer)
-        
-        session.startRunning()
-    }
+#Preview {
+    BarcodeScannerView()
 }

@@ -6,10 +6,11 @@
 //
 import Foundation
 
-struct Product: Codable, Identifiable {
-    let id: Int
-    let barcode: String
+struct Product: Identifiable {
+    let id = UUID()
     let name: String
     let brand: String
+    let barcode: String
     let imageUrl: String
+    let expiryDate: String
 }
