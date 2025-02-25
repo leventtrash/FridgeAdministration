@@ -30,6 +30,31 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		2BCFEBA82D64A79800644EDD /* Models */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Models;
+			sourceTree = "<group>";
+		};
+		2BCFEBAA2D64A7BF00644EDD /* Views */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Views;
+			sourceTree = "<group>";
+		};
+		2BCFEBAB2D64A7CF00644EDD /* ViewModels */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		2BCFEBAC2D64A7DA00644EDD /* Services */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Services;
+			sourceTree = "<group>";
+		};
+		2BCFEBAD2D64A7E200644EDD /* Utils */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Utils;
+			sourceTree = "<group>";
+		};
 		B503AA8B2D5B66EC0056EF1E /* FridgeAdministration */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = FridgeAdministration;
@@ -75,6 +100,11 @@
 		B503AA802D5B66EC0056EF1E = {
 			isa = PBXGroup;
 			children = (
+				2BCFEBAD2D64A7E200644EDD /* Utils */,
+				2BCFEBAC2D64A7DA00644EDD /* Services */,
+				2BCFEBAB2D64A7CF00644EDD /* ViewModels */,
+				2BCFEBAA2D64A7BF00644EDD /* Views */,
+				2BCFEBA82D64A79800644EDD /* Models */,
 				B503AA8B2D5B66EC0056EF1E /* FridgeAdministration */,
 				B503AA9C2D5B66ED0056EF1E /* FridgeAdministrationTests */,
 				B503AAA62D5B66ED0056EF1E /* FridgeAdministrationUITests */,
@@ -108,6 +138,11 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				2BCFEBA82D64A79800644EDD /* Models */,
+				2BCFEBAA2D64A7BF00644EDD /* Views */,
+				2BCFEBAB2D64A7CF00644EDD /* ViewModels */,
+				2BCFEBAC2D64A7DA00644EDD /* Services */,
+				2BCFEBAD2D64A7E200644EDD /* Utils */,
 				B503AA8B2D5B66EC0056EF1E /* FridgeAdministration */,
 			);
 			name = FridgeAdministration;
@@ -399,6 +434,7 @@
 				DEVELOPMENT_TEAM = 25F3TH4LS7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Die App benötigt Zugriff auf die Kamera, um Barcodes zu scannen.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -428,6 +464,7 @@
 				DEVELOPMENT_TEAM = 25F3TH4LS7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Die App benötigt Zugriff auf die Kamera, um Barcodes zu scannen.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -473,6 +510,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 25F3TH4LS7;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Die App benötigt Zugriff auf die Kamera, um Barcodes zu scannen.";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = Berufskolleg.FridgeAdministrationTests;
