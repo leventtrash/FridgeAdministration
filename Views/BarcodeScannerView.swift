@@ -37,6 +37,8 @@ struct BarcodeScannerView: View {
                     .buttonStyle(.borderedProminent)
                 }
             }
+            Text(productViewModel.product?.barcode ?? "Kein Barcode vorhanden")
+            Text(scannedBarcode)
         }
         .navigationTitle("Scanner")
     }

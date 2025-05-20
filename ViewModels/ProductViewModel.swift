@@ -6,18 +6,62 @@
 //
 import Foundation
 import Combine
+import SwiftUI
 
+@MainActor
 class ProductViewModel: ObservableObject {
-    @Published var product: Product?
+    @Published private(set) var products: [Product] = []
+    private let saveKey = "SavedProducts"
     
-    func fetchProduct(barcode: String) {
-        let mockProducts: [String: Product] = [
-            "4008400401244": Product(name: "Milch", brand: "Alpro", barcode: "4008400401244", imageUrl: "https://via.placeholder.com/100", expiryDate: "2025-03-10"),
-            "5000112545975": Product(name: "Apfelsaft", brand: "Hohes C", barcode: "5000112545975", imageUrl: "https://via.placeholder.com/100", expiryDate: "2025-05-15")
-        ]
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.product = mockProducts[barcode] ?? nil
+    init() {
+        loadProducts()
+    }
+    
+    // MARK: - CRUD Operations
+    
+    func addProduct(_ product: Product) {
+        products.append(product)
+        saveProducts()
+    }
+    
+    func removeProduct(_ product: Product) {
+        products.removeAll { $0.id == product.id }
+        saveProducts()
+    }
+    
+    func updateProduct(_ product: Product) {
+        if let index = products.firstIndex(where: { $0.id == product.id }) {
+            products[index] = product
+            saveProducts()
+        }
+    }
+    
+    // MARK: - Sorting
+    
+    func getSortedProducts() -> [Product] {
+        products.sorted { product1, product2 in
+            if product1.isExpired && !product2.isExpired {
+                return true
+            } else if !product1.isExpired && product2.isExpired {
+                return false
+            } else {
+                return product1.daysUntilExpiration < product2.daysUntilExpiration
+            }
+        }
+    }
+    
+    // MARK: - Persistence
+    
+    private func saveProducts() {
+        if let encoded = try? JSONEncoder().encode(products) {
+            UserDefaults.standard.set(encoded, forKey: saveKey)
+        }
+    }
+    
+    private func loadProducts() {
+        if let data = UserDefaults.standard.data(forKey: saveKey),
+           let decoded = try? JSONDecoder().decode([Product].self, from: data) {
+            products = decoded
         }
     }
 }
